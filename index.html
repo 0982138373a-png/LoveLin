@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>แชร์ตำแหน่งของคุณ</title>
+</head>
+<body>
+  <h2>คลิกเพื่อแชร์ที่อยู่ของคุณ</h2>
+  <button onclick="getLocation()">แชร์ตำแหน่งตอนนี้</button>
+  <p id="status"></p>
+  <p id="coords"></p>
+
+  <script>
+    function getLocation() {
+      const status = document.getElementById("status");
+      const coords = document.getElementById("coords");
+
+      if ("geolocation" in navigator) {
+        status.textContent = "กำลังขออนุญาตใช้งานพิกัด...";
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            status.textContent = "ได้รับตำแหน่งแล้ว:";
+            coords.textContent =
+              "Latitude: " + position.coords.latitude +
+              "\nLongitude: " + position.coords.longitude;
+          },
+          error => {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                status.textContent = "ผู้ใช้ไม่ได้อนุญาตแชร์ตำแหน่ง";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                status.textContent = "ไม่สามารถค้นหาตำแหน่งได้";
+                break;
+              case error.TIMEOUT:
+                status.textContent = "หมดเวลาขอข้อมูลตำแหน่ง";
+                break;
+              default:
+                status.textContent = "เกิดข้อผิดพลาดไม่ทราบสาเหตุ";
+                break;
+            }
+          }
+        );
+      } else {
+        status.textContent = "อุปกรณ์หรือเบราว์เซอร์ไม่รองรับ Geolocation";
+      }
+    }
+  </script>
+</body>
+</html>
